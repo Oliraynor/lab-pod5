@@ -1,0 +1,86 @@
+---
+apic:
+  ## Activate New Interface Configuration in NaC
+  new_interface_configuration: true
+
+  access_policies:
+      
+###Access Provisionning
+###--------------------
+
+#### VLAN Pools
+
+    vlan_pools:
+
+      - name: vlp_lab_pod5_aci
+        description: "VLAN Pool for Lab Pod 5 ACI - From 500 to 599"
+        allocation: static
+        ranges:
+
+        - from: 501
+          description: VLAN 501 - EPG A
+
+        - from: 502
+          description: VLAN 502 - EPG B
+
+
+###-------------------------------------------------------------------------------------------------------------
+###-------------------------------------------------------------------------------------------------------------
+
+#### Domains
+
+    ## Physical Domains
+    physical_domains:
+
+      - name: phy-dom_lab_pod5_aci
+        vlan_pool: vlp_lab_pod5_aci
+
+
+###-------------------------------------------------------------------------------------------------------------
+###-------------------------------------------------------------------------------------------------------------
+
+#### Attachable Access Entitiy Profiles
+
+    aaeps:
+
+      - name: aaep_lab_pod5
+        infra_vlan: false
+        physical_domains:
+          - phy-dom_lab_pod5_aci
+
+
+###-------------------------------------------------------------------------------------------------------------
+###-------------------------------------------------------------------------------------------------------------
+
+#### Leaf Interface Policy Groups
+    leaf_interface_policy_groups:
+
+### Access Ports Policy Groups
+
+      - name: ipg_lab_pod5_server_10g
+        description: IPG for Leaf Access Ports of Lab pod5 connected to servers with 10Gbps
+        type: access
+        link_level_policy: link_10g_on
+        cdp_policy: cdp_enabled
+        lldp_policy: lldp_enabled
+        spanning_tree_policy: bpdu_guard_enabled
+        mcp_policy: mcp_enabled
+        l2_policy: scope_global
+        aaep: aaep_lab_pod5
+
+
+###-------------------------------------------------------------------------------------------------------------
+
+### Virtual Port-Channel Policy Groups
+
+      - name: ipg_lab_pod5_serverA_vpc1
+        description: IPG for vPC Lab pod5 Server A vpc1
+        type: vpc
+        link_level_policy: link_10g_on
+        cdp_policy: cdp_enabled
+        lldp_policy: lldp_enabled
+        spanning_tree_policy: bpdu_guard_enabled
+        mcp_policy: mcp_enabled
+        l2_policy: scope_global
+        port_channel_policy: po_lacp_active
+        aaep: aaep_lab_pod5

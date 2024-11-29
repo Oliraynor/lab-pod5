@@ -1,0 +1,8 @@
+---
+ndo:
+  tenants:
+    - name: lab_pod5_ms
+      description: Tenant for Lab NaC Multi-Site Pod 5
+      sites:
+        - name: DC1
+        - name: DC2
